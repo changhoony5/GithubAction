@@ -33,16 +33,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3.2.1
-
-     # NDK 설치
-      - name: Set up Android NDK
-        run: |
-          sudo mkdir -p $ANDROID_SDK_ROOT/ndk-bundle
-          sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.4.7075529"
-          sudo ln -s $ANDROID_SDK_ROOT/ndk/21.4.7075529 $ANDROID_SDK_ROOT/ndk-bundle
 
       # 키스토어 설정
           
