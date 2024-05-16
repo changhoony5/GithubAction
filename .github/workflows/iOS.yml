@@ -28,10 +28,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-      - name: Zip the build folder
-        run: zip -r ${{ secrets.APP_NAME }}.zip build/iOS
-
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ secrets.APP_NAME }}-build
-          path: build/${{ secrets.APP_NAME }}.zip
+          path: build/iOS
