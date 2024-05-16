@@ -1,0 +1,30 @@
+name: Build on iOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  buildForiOSPlatform:
+    name: Build for iOS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-iOS
+
+      - uses: game-ci/unity-builder@v4
+        with:
+          targetPlatform: iOS
+
+      - name: Zip the build folder
+        run: zip -r ${{ secrets.APP_NAME }}.zip build/iOS
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ secrets.APP_NAME }}-build
+          path: ${{ secrets.APP_NAME }}.zip
