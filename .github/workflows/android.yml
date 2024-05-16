@@ -1,4 +1,4 @@
-name: Unity Build
+name: Unity Android Build
 
 on:
   push:
