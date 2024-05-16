@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 도커 파일 설정 (필요한 경우에만)
+      # Docker 설정 (필요한 경우에만)
       - name: Setup Docker
         run: docker build -t unity-ci -f Dockerfile .
 
