@@ -2,6 +2,8 @@ name: Unity Android Build
 
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
 
@@ -43,15 +45,15 @@ jobs:
           TAG_WITH_UNDERSCORES=${TAG//./_}
           mv build/Android/*.apk build/Android/${{ secrets.APP_NAME }}_$TAG_WITH_UNDERSCORES.apk    
 
-#      - name: Upload APK to S3
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_REGION: ${{ secrets.AWS_REGION }}
-#        run: |
-#        apk_file=$(ls build/Android/*.apk)
-#          aws s3 cp $apk_file s3://your-s3-bucket-name/ --acl public-read
-#          
+      - name: Upload APK to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          apk_file=$(ls build/Android/*.apk)
+          aws s3 cp $apk_file s3://dp-mobile-app/test --acl public-read
+          
       - uses: actions/upload-artifact@v4
         with:
           name: ${{APP_NAME}}-apk-android
