@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 빌드 후 디스크 정리
+      - name: Clean up disk space
+        run: |
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          docker system prune -af
+          
       # 리포지토리 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v2
