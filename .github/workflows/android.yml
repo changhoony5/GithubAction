@@ -23,10 +23,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Docker 설정 (필요한 경우에만)
-      - name: Setup Docker
-        run: docker build -t unity-ci -f Dockerfile .
-
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
