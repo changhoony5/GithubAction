@@ -22,12 +22,12 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android/sdk
           sudo rm -rf /opt/ghc
-          
+
       # 리포지토리 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v2
 
-     # JDK 설치
+      # JDK 설치
       - name: Set up JDK
         uses: actions/setup-java@v4.2.1
         with:
@@ -35,13 +35,17 @@ jobs:
           distribution: 'adopt'
 
       # 키스토어 설정
-          
+      - name: Set up keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $HOME/my-release-key.keystore
+
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
         with:
           version: 2023.2.20f1
           targetPlatform: Android
+          customParameters: '-keystore $HOME/my-release-key.keystore -keystorePassword ${{ secrets.KEYSTORE_PASSWORD }} -keyalias ${{ secrets.KEYSTORE_ALIAS }} -keyPassword ${{ secrets.KEY_PASSWORD }}'
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -50,10 +54,18 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 아티팩트 업로드
+      # 아티팩트 업로드 (성공 또는 실패 시)
       - name: Upload build logs
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: build-logs
           path: '**/build/reports/**/*'
+
+      # 빌드 아티팩트 업로드 (성공 시)
+      - name: Upload Build Artifacts
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: '**/Builds/**/*'
