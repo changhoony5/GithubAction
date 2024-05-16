@@ -2,8 +2,6 @@ name: Unity Android Build
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '*'
 
@@ -39,11 +37,14 @@ jobs:
           androidTargetSdkVersion: AndroidApiLevel33
 
       # tag : 1.0.0  => 1_0_0 으로 변환 해주기
+      - name: Set Permissions
+        run: chmod +rw build/Android/*.apk
+
       - name: Rename APK
         run: |
           TAG=$(git describe --tags --abbrev=0)
           TAG_WITH_UNDERSCORES=${TAG//./_}
-          mv build/Android/*.apk build/Android/${{ secrets.APP_NAME }}_$TAG_WITH_UNDERSCORES.apk    
+          mv build/Android/*.apk build/Android/${{ secrets.APP_NAME }}_$TAG_WITH_UNDERSCORES.apk
 
       - name: Upload APK to S3
         env:
