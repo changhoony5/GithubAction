@@ -36,7 +36,7 @@ jobs:
           androidKeystorePass: ${{ secrets.KEYSTORE_PASSWORD }}
           androidKeyaliasName: ${{ secrets.KEYSTORE_ALIAS }}
           androidKeyaliasPass: ${{ secrets.KEY_PASSWORD }}
-          androidTargetSdkVersion: AndroidApiLevel30
+          androidTargetSdkVersion: AndroidApiLevel33
           
       - uses: actions/upload-artifact@v3
         with:
