@@ -1,0 +1,36 @@
+name: Build on WebGL
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  buildForWebGLPlatform:
+    name: Build for WebGL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-WebGL
+
+      # Unity 설정 및 빌드
+      - name: Setup and Build Unity
+        uses: game-ci/unity-builder@v4
+        with:
+          version: 2023.2.20f1
+          targetPlatform: WebGL
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ secrets.APP_NAME }}-build-WebGL
+          path: build/WebGL
