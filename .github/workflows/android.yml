@@ -33,6 +33,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3.2.1
+        with:
+          api-level: 30
+          build-tools: 30.0.3
 
      # NDK 설치
       - name: Set up Android NDK
