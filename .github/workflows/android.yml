@@ -12,32 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 디스크 공간 정리
-      - name: Clean up disk space before build
-        run: |
-          sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
-          docker system prune -af
-          sudo rm -rf /usr/local/lib/android/sdk
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android/sdk
-          sudo rm -rf /opt/ghc
-
-      # 리포지토리 체크아웃
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      # JDK 설치
-      - name: Set up JDK
-        uses: actions/setup-java@v4.2.1
+      - uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      # 키스토어 설정
-      - name: Set up keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $HOME/my-release-key.keystore
+          path: Library
+          key: Library-Android
 
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
@@ -50,22 +30,15 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      # 아티팩트 업로드 (성공 또는 실패 시)
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@v2
+          androidExportType: 'androidPackageapk'
+          androidKeystoreName: user.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE }}
+          androidKeystorePass: ${{ secrets.KEYSTORE_PASSWORD }}
+          androidKeyaliasName: ${{ secrets.KEYSTORE_ALIAS }}
+          androidKeyaliasPass: ${{ secrets.KEY_PASSWORD }}
+          androidTargetSdkVersion: AndroidApiLevel30
+          
+      - uses: actions/upload-artifact@v3
         with:
-          name: build-logs
-          path: '**/build/reports/**/*'
-
-      # 빌드 아티팩트 업로드 (성공 시)
-      - name: Upload Build Artifacts
-        if: success()
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-artifacts
-          path: '**/Builds/**/*'
+          name: build-Android
+          path: build/Android
