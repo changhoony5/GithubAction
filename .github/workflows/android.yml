@@ -56,5 +56,5 @@ jobs:
           
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{APP_NAME}}-apk-android
+          name: ${{ secrets.APP_NAME }}-apk-android
           path: build/Android
