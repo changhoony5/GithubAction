@@ -73,6 +73,9 @@ crashlytics-build.properties
 
 
 # Github Action 
+# Ignore temporaries from GameCI
+/[Aa]rtifacts/
+/[Cc]odeCoverage/
 # Android
 sdk-tools.zip
 user.keystore
