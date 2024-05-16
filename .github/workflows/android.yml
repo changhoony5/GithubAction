@@ -28,7 +28,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          androidExportType: 'androidPackage'
+          androidExportType: 'androidPackage' # if want to change for .aab , then write here this 'androidAppBundle'
           androidKeystoreName: user.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE }}
           androidKeystorePass: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -54,5 +54,5 @@ jobs:
 #          
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{APP_NAME}}_APK
+          name: ${{APP_NAME}}-apk-android
           path: build/Android
