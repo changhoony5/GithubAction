@@ -34,11 +34,14 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      # Android SDK 설치
+     # NDK 설치
       - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1.5.0
-        with:
-          ndk-version: 21.4.7075529
+        run: |
+          sudo mkdir -p $ANDROID_SDK_ROOT/ndk-bundle
+          sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.4.7075529"
+          sudo ln -s $ANDROID_SDK_ROOT/ndk/21.4.7075529 $ANDROID_SDK_ROOT/ndk-bundle
+
+      # 키스토어 설정
           
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
