@@ -16,12 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 도커 파일 설정
+      # 도커 파일 설정 (필요한 경우에만)
       - name: Setup Docker
         run: docker build -t unity-ci -f Dockerfile .
 
-      # Unity 설정
-      - name: Setup Unity
+      # Unity 설정 및 빌드
+      - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
         with:
           version: 2023.2.20f1
@@ -30,8 +30,11 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # Android 빌드 준비
+      # Android 빌드 준비 (필요한 경우에만)
       - name: Setup Android
         uses: actions/setup-android@v2
         with:
@@ -41,21 +44,6 @@ jobs:
       - name: Set up Keystore
         run: |
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > user.keystore
-        env:
-          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      # 유니티 빌드
-      - name: Build Unity project
-        uses: game-ci/unity-builder@v4
-        with:
-          targetPlatform: Android
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       # 아티팩트 업로드
       - name: Upload build artifact
