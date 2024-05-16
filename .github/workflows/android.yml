@@ -41,9 +41,11 @@ jobs:
           
       # 키스토어 설정
       - name: Set up Keystore
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
-          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > user.keystore
-          
+          echo $ANDROID_KEYSTORE | openssl base64 -d -A > user.keystore
+
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
