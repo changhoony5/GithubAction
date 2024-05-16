@@ -2,8 +2,6 @@ name: Unity Build
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '*'
 
@@ -37,8 +35,24 @@ jobs:
           androidKeyaliasName: ${{ secrets.KEYSTORE_ALIAS }}
           androidKeyaliasPass: ${{ secrets.KEY_PASSWORD }}
           androidTargetSdkVersion: AndroidApiLevel33
-          
+
+      # tag : 1.0.0  => 1_0_0 으로 변환 해주기
+      - name: Rename APK
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          TAG_WITH_UNDERSCORES=${TAG//./_}
+          mv build/Android/*.apk build/Android/${{ secrets.APP_NAME }}_$TAG_WITH_UNDERSCORES.apk    
+
+#      - name: Upload APK to S3
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_REGION: ${{ secrets.AWS_REGION }}
+#        run: |
+#        apk_file=$(ls build/Android/*.apk)
+#          aws s3 cp $apk_file s3://your-s3-bucket-name/ --acl public-read
+#          
       - uses: actions/upload-artifact@v3
         with:
-          name: build-Android
+          name: ${{APP_NAME}}_APK
           path: build/Android
