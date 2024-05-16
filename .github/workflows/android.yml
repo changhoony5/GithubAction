@@ -27,6 +27,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Android 빌드 준비 (필요한 경우에만)
+      - name: Setup Android
+        uses: android-actions/setup-android@v3.2.1
+        with:
+          java-version: 11
+
+      # 키스토어 설정
+      - name: Set up Keystore
+        run: |
+          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > user.keystore
+          
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
@@ -40,17 +51,6 @@ jobs:
           KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      # Android 빌드 준비 (필요한 경우에만)
-      - name: Setup Android
-        uses: android-actions/setup-android@v3.2.1
-        with:
-          java-version: 11
-
-      # 키스토어 설정
-      - name: Set up Keystore
-        run: |
-          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > user.keystore
 
       # 아티팩트 업로드
       - name: Upload build artifact
