@@ -47,9 +47,14 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ secrets.APP_NAME }}-build-iOS-xcodeproj
+          name: ${{ secrets.APP_NAME }}-iOS
           path: build/iOS
 
+      # WebGL 폴더를 .zip 파일로 압축
+      - name: Zip WebGL folder
+        run: |
+          zip -r build/${{ env.APP_NAME }}-iOS-${{ env.TAG_WITH_UNDERSCORES }}.zip build/iOS
+    
       # S3에 업로드
       - name: Upload IOS to S3
         env:
@@ -57,4 +62,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws s3 sync build/iOS s3://dp-mobile-app/test/
+          aws s3 cp build/${{ env.APP_NAME }}-iOS-${{ env.TAG_WITH_UNDERSCORES }}.zip s3://dp-mobile-app/test/
