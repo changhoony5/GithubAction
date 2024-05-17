@@ -28,7 +28,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          androidExportType: ${{ ANDROID_EXPORT_TYPE }} # if want to change for .aab , then write here this 'androidAppBundle'
+          androidExportType: 'androidPackage' # if want to change for .aab , then write here this 'androidAppBundle'
           androidKeystoreName: user.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE }}
           androidKeystorePass: ${{ secrets.KEYSTORE_PASSWORD }}
