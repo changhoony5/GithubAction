@@ -52,7 +52,7 @@ jobs:
       
       - name: Change permissions
         run: |
-          chmod -R 777 build/iOS
+          sudo chmod -R 777 build/iOS
           
       # WebGL 폴더를 .zip 파일로 압축
       - name: Zip WebGL folder
