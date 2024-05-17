@@ -4,7 +4,9 @@ on:
   push:
     tags:
       - '*'
-
+env:
+  APP_NAME: ${{ secrets.APP_NAME }}
+  
 jobs:
   buildForWebGLPlatform:
     name: Build for WebGL
@@ -17,6 +19,19 @@ jobs:
           path: Library
           key: Library-WebGL
 
+      # tag : 1.0.0  => 1_0_0 으로 변환 해주기
+      - name: Set TAG environment variable
+        id: set_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Convert TAG dots to underscores
+        id: convert_tag
+        run: |
+          TAG_WITH_UNDERSCORES=${TAG//./_}
+          echo "TAG_WITH_UNDERSCORES=$TAG_WITH_UNDERSCORES" >> $GITHUB_ENV
+          
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
@@ -30,18 +45,22 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-       # APK artifact 업로드
+       # WebGL artifact 업로드
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-WebGL-${{ env.TAG_WITH_UNDERSCORES }}
           path: build/WebGL
-
-      # APK를 S3에 업로드
+      # WebGL 폴더를 .zip 파일로 압축
+      - name: Zip WebGL folder
+        run: |
+          zip -r build/${{ env.APP_NAME }}-WebGL-${{ env.TAG_WITH_UNDERSCORES }}.zip build/WebGL
+    
+      # WebGL를 S3에 업로드
       - name: Upload APK to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws s3 sync build/WebGL s3://dp-mobile-app/test/
+          aws s3 cp build/${{ env.APP_NAME }}-WebGL-${{ env.TAG_WITH_UNDERSCORES }}.zip s3://dp-mobile-app/test/
