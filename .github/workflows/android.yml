@@ -4,7 +4,11 @@ on:
   push:
     tags:
       - '*'
-
+      
+env:
+  TAG: ""
+  TAG_WITH_UNDERSCORES: ""
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,7 +47,9 @@ jobs:
 
       - name: Convert TAG dots to underscores
         id: convert_tag
-        run: echo "TAG_WITH_UNDERSCORES=${{ env.TAG//./_ }}" >> $GITHUB_ENV
+        run: |
+          TAG_WITH_UNDERSCORES=${{ env.TAG//./_ }}
+          echo "TAG_WITH_UNDERSCORES=$TAG_WITH_UNDERSCORES" >> $GITHUB_ENV
 
       # APK artifact 업로드
       - name: Upload APK artifact
