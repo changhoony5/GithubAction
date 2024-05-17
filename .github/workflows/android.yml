@@ -23,6 +23,7 @@ jobs:
         with:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
+          buildMethod: UnityBuilderAction.BuildScript.Build
           customBuildName: ${{ secrets.APP_NAME }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
