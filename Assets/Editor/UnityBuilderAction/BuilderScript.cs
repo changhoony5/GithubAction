@@ -155,7 +155,7 @@ namespace UnityBuilderAction
 
                 // Assign
                 Console.WriteLine($"Found flag \"{flag}\" with value {displayValue}.");
-                providedArguments.Add(flag, value);
+                providedArguments[flag] = value;
             }
         }
 
