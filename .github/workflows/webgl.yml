@@ -44,5 +44,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          apk_file=$(ls build/Android/*.apk)
-          aws s3 cp $apk_file s3://dp-mobile-app/test/
+          webGL_files=$(ls build/WebGL/*)
+          aws s3 cp $webGL_files s3://dp-mobile-app/test/
