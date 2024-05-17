@@ -37,6 +37,7 @@ jobs:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
           buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -customBuildName ${{ secrets.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -48,7 +49,6 @@ jobs:
           androidKeyaliasName: ${{ secrets.KEYSTORE_ALIAS }}
           androidKeyaliasPass: ${{ secrets.KEY_PASSWORD }}
           androidTargetSdkVersion: AndroidApiLevel33
-          customBuildName: ${{ secrets.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
 
       # APK artifact 업로드
       - name: Upload APK artifact
