@@ -9,8 +9,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      # tag : 1.0.0  => 1_0_0 으로 변환 해주기
+    steps:        
+      - uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-Android
+
+ # tag : 1.0.0  => 1_0_0 으로 변환 해주기
       - name: Set TAG environment variable
         id: set_tag
         run: |
@@ -23,13 +30,6 @@ jobs:
           TAG_WITH_UNDERSCORES=${TAG//./_}
           echo "TAG_WITH_UNDERSCORES=$TAG_WITH_UNDERSCORES" >> $GITHUB_ENV
           
-      - uses: jlumbroso/free-disk-space@v1.3.1
-      - uses: actions/checkout@v4
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-Android
-
       # Unity 설정 및 빌드
       - name: Setup and Build Unity
         uses: game-ci/unity-builder@v4
