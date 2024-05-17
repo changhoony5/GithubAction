@@ -10,6 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # tag : 1.0.0  => 1_0_0 으로 변환 해주기
+      - name: Set TAG environment variable
+        id: set_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Convert TAG dots to underscores
+        id: convert_tag
+        run: |
+          TAG_WITH_UNDERSCORES=${TAG//./_}
+          echo "TAG_WITH_UNDERSCORES=$TAG_WITH_UNDERSCORES" >> $GITHUB_ENV
+          
       - uses: jlumbroso/free-disk-space@v1.3.1
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
@@ -24,7 +37,6 @@ jobs:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
           buildMethod: UnityBuilderAction.BuildScript.Build
-          customBuildName: ${{ secrets.APP_NAME }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -36,19 +48,7 @@ jobs:
           androidKeyaliasName: ${{ secrets.KEYSTORE_ALIAS }}
           androidKeyaliasPass: ${{ secrets.KEY_PASSWORD }}
           androidTargetSdkVersion: AndroidApiLevel33
-
-      # tag : 1.0.0  => 1_0_0 으로 변환 해주기
-      - name: Set TAG environment variable
-        id: set_tag
-        run: |
-          TAG=$(git describe --tags --abbrev=0)
-          echo "TAG=$TAG" >> $GITHUB_ENV
-
-      - name: Convert TAG dots to underscores
-        id: convert_tag
-        run: |
-          TAG_WITH_UNDERSCORES=${TAG//./_}
-          echo "TAG_WITH_UNDERSCORES=$TAG_WITH_UNDERSCORES" >> $GITHUB_ENV
+          customBuildName: ${{ secrets.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
 
       # APK artifact 업로드
       - name: Upload APK artifact
