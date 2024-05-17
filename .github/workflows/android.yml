@@ -4,7 +4,9 @@ on:
   push:
     tags:
       - '*'
-
+env:
+  APP_NAME: ${{ secrets.APP_NAME }}
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +39,7 @@ jobs:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
           buildMethod: UnityBuilderAction.BuildScript.Build
-          customParameters: -customBuildName ${{ secrets.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
+          customParameters: -customBuildName ${{ env.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -54,7 +56,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ secrets.APP_NAME }}-apk-android-${{ env.TAG_WITH_UNDERSCORES }}
+          name: ${{ env.APP_NAME }}-apk-android-${{ env.TAG_WITH_UNDERSCORES }}
           path: build/Android/*.apk
 
       # APK를 S3에 업로드
