@@ -51,6 +51,11 @@ jobs:
         with:
           name: ${{ env.APP_NAME }}-WebGL-${{ env.TAG_WITH_UNDERSCORES }}
           path: build/WebGL
+
+      - name: Change permissions
+        run: |
+          chmod -R 777 build/WebGL
+      
       # WebGL 폴더를 .zip 파일로 압축
       - name: Zip WebGL folder
         run: |
