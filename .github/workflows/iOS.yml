@@ -57,7 +57,7 @@ jobs:
       # WebGL 폴더를 .zip 파일로 압축
       - name: Zip WebGL folder
         run: |
-          zip -r build/${{ env.APP_NAME }}-iOS-${{ env.TAG_WITH_UNDERSCORES }}.zip build/iOS
+          sudo zip -r build/${{ env.APP_NAME }}-iOS-${{ env.TAG_WITH_UNDERSCORES }}.zip build/iOS
     
       # S3에 업로드
       - name: Upload IOS to S3
