@@ -39,7 +39,7 @@ jobs:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
           buildMethod: UnityBuilderAction.BuildScript.Build
-          customParameters: -customBuildName ${{ env.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
+          customParameters: -customBuildPath build/Android/${{ env.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}.apk
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
