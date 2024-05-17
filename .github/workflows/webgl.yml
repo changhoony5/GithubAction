@@ -23,12 +23,26 @@ jobs:
         with:
           version: 2023.2.20f1
           targetPlatform: WebGL
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -customBuildPath build/WebGL/${{ env.APP_NAME }}_${{ env.TAG_WITH_UNDERSCORES }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-      - uses: actions/upload-artifact@v4
+       # APK artifact 업로드
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ secrets.APP_NAME }}-build-WebGL
+          name: ${{ env.APP_NAME }}-WebGL-${{ env.TAG_WITH_UNDERSCORES }}
           path: build/WebGL
+
+      # APK를 S3에 업로드
+      - name: Upload APK to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          apk_file=$(ls build/Android/*.apk)
+          aws s3 cp $apk_file s3://dp-mobile-app/test/
