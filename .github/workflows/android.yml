@@ -23,7 +23,7 @@ jobs:
         with:
           version: ${{ secrets.UNITY_EDITOR_VERSION }}
           targetPlatform: Android
-          customParameters: -customBuildPath build/Android/${{ secrets.APP_NAME }}
+          customParameters: -customBuildName ${{ secrets.APP_NAME }}
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
